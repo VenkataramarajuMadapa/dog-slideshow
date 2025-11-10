@@ -23,20 +23,28 @@ function createBreedList(breedList) {
 }
 
 async function loadByBreed(breed) {
+  const slideshow = document.getElementById("slideshow");
   if (breed !== "Choose a dog breed") {
-    const response = await fetch(`https://dog.ceo/api/breed/${breed}/images`);
-    const data = await response.json();
-    createSlideshow(data.message);
+    slideshow.innerHTML = "<p class='loading'>Loading images...</p>";
+    try {
+      const response = await fetch(`https://dog.ceo/api/breed/${breed}/images`);
+      const data = await response.json();
+      createSlideshow(data.message);
+    } catch (e) {
+      slideshow.innerHTML = "<p class='error'>Failed to load images.</p>";
+      console.log("Error fetching images:", e);
+    }
   }
 }
 
 function createSlideshow(images) {
   let currentPosition = 0;
+  const slideshow = document.getElementById("slideshow");
   clearInterval(timer);
   clearTimeout(deleteFirstPhotoDelay);
 
   if (images.length > 1) {
-    document.getElementById("slideshow").innerHTML = `
+    slideshow.innerHTML = `
       <div class="slide" style="background-image: url('${images[0]}')"></div>
       <div class="slide" style="background-image: url('${images[1]}')"></div>
     `;
@@ -45,14 +53,14 @@ function createSlideshow(images) {
 
     timer = setInterval(nextSlide, 3000);
   } else {
-    document.getElementById("slideshow").innerHTML = `
+    slideshow.innerHTML = `
       <div class="slide" style="background-image: url('${images[0]}')"></div>
       <div class="slide"></div>
     `;
   }
 
   function nextSlide() {
-    document.getElementById("slideshow").insertAdjacentHTML(
+    slideshow.insertAdjacentHTML(
       "beforeend",
       `<div class="slide" style="background-image: url('${images[currentPosition]}')"></div>`
     );
@@ -63,3 +71,13 @@ function createSlideshow(images) {
     currentPosition = (currentPosition + 1) % images.length;
   }
 }
+
+// Reset button functionality
+document.getElementById("resetBtn").addEventListener("click", () => {
+  const slideshow = document.getElementById("slideshow");
+  slideshow.innerHTML = "";
+  const selectBox = document.getElementById("breed").querySelector("select");
+  selectBox.selectedIndex = 0;
+  clearInterval(timer);
+  clearTimeout(deleteFirstPhotoDelay);
+});

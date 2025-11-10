@@ -22,6 +22,24 @@ html, body {
 
 .header select {
   font-size: 1rem;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#resetBtn {
+  margin-top: 10px;
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff9800;
+  color: white;
+}
+
+#resetBtn:hover {
+  background-color: #e68a00;
 }
 
 .slideshow {
@@ -48,4 +66,16 @@ html, body {
 .slide:nth-last-child(2) {
   opacity: 1;
   transform: scale(1.08);
+}
+
+.slide:hover {
+  transform: scale(1.05);
+  transition: transform 0.5s ease;
+}
+
+.loading, .error {
+  color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  padding-top: 50px;
 }
